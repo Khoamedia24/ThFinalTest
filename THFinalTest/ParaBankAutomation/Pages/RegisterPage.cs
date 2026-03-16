@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using ParaBankAutomation.Models;
 using ParaBankAutomation.Utilities;
 
 namespace ParaBankAutomation.Pages;
@@ -47,18 +48,4 @@ public class RegisterPage
         _driver.FindElement(_confirmPasswordInput).SendKeys(user.Password);
         _driver.FindElement(_registerButton).Click();
     }
-}
-
-public class UserData
-{
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string State { get; set; } = string.Empty;
-    public string ZipCode { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string Ssn { get; set; } = string.Empty;
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }
