@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using ParaBankAutomation.Utilities;
 
@@ -18,7 +19,27 @@ public abstract class BaseTest
     [TearDown]
     public void TearDown()
     {
-        Driver.Quit();
-        Driver.Dispose();
+        try
+        {
+            if (Driver != null && TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+            {
+                if (Driver is ITakesScreenshot screenshotTaker)
+                {
+                    var screenshot = screenshotTaker.GetScreenshot();
+                    var directory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Screenshots");
+                    Directory.CreateDirectory(directory);
+
+                    var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+                    var filePath = Path.Combine(directory, fileName);
+                    screenshot.SaveAsFile(filePath);
+                    TestContext.AddTestAttachment(filePath);
+                }
+            }
+        }
+        finally
+        {
+            Driver?.Quit();
+            Driver?.Dispose();
+        }
     }
 }

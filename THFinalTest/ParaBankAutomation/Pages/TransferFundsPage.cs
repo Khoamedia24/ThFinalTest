@@ -28,19 +28,63 @@ public class TransferFundsPage
 
     public void Transfer(string amount)
     {
-        _wait.WaitUntilVisible(_amountInput).SendKeys(amount);
+        var accounts = GetAvailableFromAccounts();
+        var fromAccount = accounts[0];
+        var toAccount = accounts.Count > 1 ? accounts[1] : accounts[0];
 
-        var fromAccount = new SelectElement(_driver.FindElement(_fromAccountSelect));
-        var toAccount = new SelectElement(_driver.FindElement(_toAccountSelect));
+        Transfer(amount, fromAccount, toAccount);
+    }
 
-        fromAccount.SelectByIndex(0);
-        toAccount.SelectByIndex(0);
+    public void Transfer(string amount, string fromAccount, string toAccount)
+    {
+        var amountElement = _wait.WaitUntilVisible(_amountInput);
+        amountElement.Clear();
+        amountElement.SendKeys(amount);
+
+        WaitForAccountOptions();
+
+        var fromSelect = new SelectElement(_driver.FindElement(_fromAccountSelect));
+        var toSelect = new SelectElement(_driver.FindElement(_toAccountSelect));
+
+        SelectAccount(fromSelect, fromAccount);
+        SelectAccount(toSelect, toAccount);
 
         _driver.FindElement(_transferButton).Click();
+    }
+
+    public List<string> GetAvailableFromAccounts()
+    {
+        WaitForAccountOptions();
+        var fromSelect = new SelectElement(_driver.FindElement(_fromAccountSelect));
+        return fromSelect.Options
+            .Select(option => option.GetAttribute("value") ?? option.Text)
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .ToList();
     }
 
     public bool IsTransferSuccessful()
     {
         return _wait.WaitUntilVisible(_successMessage).Displayed;
+    }
+
+    private void WaitForAccountOptions()
+    {
+        _wait.WaitUntil(driver =>
+        {
+            var fromSelect = new SelectElement(driver.FindElement(_fromAccountSelect));
+            var toSelect = new SelectElement(driver.FindElement(_toAccountSelect));
+            return fromSelect.Options.Count > 0 && toSelect.Options.Count > 0;
+        });
+    }
+
+    private static void SelectAccount(SelectElement selectElement, string account)
+    {
+        if (selectElement.Options.Any(o => (o.GetAttribute("value") ?? string.Empty) == account))
+        {
+            selectElement.SelectByValue(account);
+            return;
+        }
+
+        selectElement.SelectByText(account);
     }
 }

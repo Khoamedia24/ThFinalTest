@@ -20,4 +20,9 @@ public class WaitHelper
             return element.Displayed ? element : null;
         })!;
     }
+
+    public void WaitUntil(Func<IWebDriver, bool> condition)
+    {
+        _wait.Until(driver => condition(driver));
+    }
 }

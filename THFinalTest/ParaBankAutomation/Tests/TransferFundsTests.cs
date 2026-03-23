@@ -16,7 +16,11 @@ public class TransferFundsTests : BaseTest
         loginPage.Login("john", "demo");
 
         transferFundsPage.Open(BaseUrl);
-        transferFundsPage.Transfer("10");
+        var accounts = transferFundsPage.GetAvailableFromAccounts();
+        var fromAccount = accounts[0];
+        var toAccount = accounts.Count > 1 ? accounts[1] : accounts[0];
+
+        transferFundsPage.Transfer("10", fromAccount, toAccount);
 
         Assert.That(transferFundsPage.IsTransferSuccessful(), Is.True);
     }

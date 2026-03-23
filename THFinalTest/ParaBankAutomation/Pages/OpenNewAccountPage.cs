@@ -28,6 +28,13 @@ public class OpenNewAccountPage
     public void OpenNewAccount(string accountType)
     {
         var accountTypeSelect = new SelectElement(_wait.WaitUntilVisible(_accountTypeSelect));
+
+        _wait.WaitUntil(driver =>
+        {
+            var fromSelect = new SelectElement(driver.FindElement(_fromAccountSelect));
+            return fromSelect.Options.Count > 0;
+        });
+
         var fromAccountSelect = new SelectElement(_driver.FindElement(_fromAccountSelect));
 
         accountTypeSelect.SelectByText(accountType);
