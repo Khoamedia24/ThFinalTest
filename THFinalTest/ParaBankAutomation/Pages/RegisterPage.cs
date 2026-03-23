@@ -1,64 +1,93 @@
-using OpenQA.Selenium;
-using ParaBankAutomation.Utilities;
+﻿using OpenQA.Selenium;
 
 namespace ParaBankAutomation.Pages;
 
 public class RegisterPage
 {
-    private readonly IWebDriver _driver;
-    private readonly WaitHelper _wait;
+    private readonly IWebDriver driver;
 
-    private readonly By _firstNameInput = By.Id("customer.firstName");
-    private readonly By _lastNameInput = By.Id("customer.lastName");
-    private readonly By _addressInput = By.Id("customer.address.street");
-    private readonly By _cityInput = By.Id("customer.address.city");
-    private readonly By _stateInput = By.Id("customer.address.state");
-    private readonly By _zipCodeInput = By.Id("customer.address.zipCode");
-    private readonly By _phoneInput = By.Id("customer.phoneNumber");
-    private readonly By _ssnInput = By.Id("customer.ssn");
-    private readonly By _usernameInput = By.Id("customer.username");
-    private readonly By _passwordInput = By.Id("customer.password");
-    private readonly By _confirmPasswordInput = By.Id("repeatedPassword");
-    private readonly By _registerButton = By.CssSelector("input[value='Register']");
+    // Locators bạn đã cung cấp
+    private static readonly By _firstNameInput = By.Id("customer.firstName");
+
+    private static readonly By _lastNameInput = By.Id("customer.lastName");
+    private static readonly By _addressInput = By.Id("customer.address.street");
+    private static readonly By _cityInput = By.Id("customer.address.city");
+    private static readonly By _stateInput = By.Id("customer.address.state");
+    private static readonly By _zipCodeInput = By.Id("customer.address.zipCode");
+    private static readonly By _phoneInput = By.Id("customer.phoneNumber");
+    private static readonly By _ssnInput = By.Id("customer.ssn");
+    private static readonly By _usernameInput = By.Id("customer.username");
+    private static readonly By _passwordInput = By.Id("customer.password");
+    private static readonly By _confirmPasswordInput = By.Id("repeatedPassword");
+    private static readonly By _registerButton = By.CssSelector("input[value='Register']");
+
+    // Locators hỗ trợ lấy kết quả (dành cho Parabank)
+    private static readonly By _successMessage = By.CssSelector("#rightPanel p");
+
+    private static readonly By _errorMessages = By.CssSelector(".error"); // Parabank thường dùng class .error cho các text màu đỏ
 
     public RegisterPage(IWebDriver driver)
     {
-        _driver = driver;
-        _wait = new WaitHelper(driver);
+        this.driver = driver ?? throw new ArgumentNullException(nameof(driver));
     }
 
-    public void Open(string baseUrl)
+    // --- Các hàm nhập liệu ---
+    public void EnterFirstName(string text) => EnterText(_firstNameInput, text);
+
+    public void EnterLastName(string text) => EnterText(_lastNameInput, text);
+
+    public void EnterAddress(string text) => EnterText(_addressInput, text);
+
+    public void EnterCity(string text) => EnterText(_cityInput, text);
+
+    public void EnterState(string text) => EnterText(_stateInput, text);
+
+    public void EnterZipCode(string text) => EnterText(_zipCodeInput, text);
+
+    public void EnterPhone(string text) => EnterText(_phoneInput, text);
+
+    public void EnterSSN(string text) => EnterText(_ssnInput, text);
+
+    public void EnterUsername(string text) => EnterText(_usernameInput, text);
+
+    public void EnterPassword(string text) => EnterText(_passwordInput, text);
+
+    public void EnterConfirmPassword(string text) => EnterText(_confirmPasswordInput, text);
+
+    // Hàm click đăng ký
+    public void ClickRegister()
     {
-        _driver.Navigate().GoToUrl($"{baseUrl}/register.htm");
+        driver.FindElement(_registerButton).Click();
     }
 
-    public void Register(UserData user)
+    // --- Các hàm hỗ trợ lấy kết quả test ---
+    public string GetSuccessMessage()
     {
-        _wait.WaitUntilVisible(_firstNameInput).SendKeys(user.FirstName);
-        _driver.FindElement(_lastNameInput).SendKeys(user.LastName);
-        _driver.FindElement(_addressInput).SendKeys(user.Address);
-        _driver.FindElement(_cityInput).SendKeys(user.City);
-        _driver.FindElement(_stateInput).SendKeys(user.State);
-        _driver.FindElement(_zipCodeInput).SendKeys(user.ZipCode);
-        _driver.FindElement(_phoneInput).SendKeys(user.Phone);
-        _driver.FindElement(_ssnInput).SendKeys(user.Ssn);
-        _driver.FindElement(_usernameInput).SendKeys(user.Username);
-        _driver.FindElement(_passwordInput).SendKeys(user.Password);
-        _driver.FindElement(_confirmPasswordInput).SendKeys(user.Password);
-        _driver.FindElement(_registerButton).Click();
+        try { return driver.FindElement(_successMessage).Text; }
+        catch (NoSuchElementException) { return string.Empty; }
     }
-}
 
-public class UserData
-{
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string State { get; set; } = string.Empty;
-    public string ZipCode { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string Ssn { get; set; } = string.Empty;
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public string GetErrorMessage()
+    {
+        try
+        {
+            // Có thể có nhiều lỗi hiển thị cùng lúc (ví dụ bỏ trống nhiều trường) Ta gộp tất cả lại
+            // thành 1 chuỗi để dễ so sánh
+            var errors = driver.FindElements(_errorMessages);
+            if (errors.Count > 0)
+            {
+                return string.Join(" | ", errors.Select(e => e.Text).Where(t => !string.IsNullOrEmpty(t)));
+            }
+            return string.Empty;
+        }
+        catch (NoSuchElementException) { return string.Empty; }
+    }
+
+    // Hàm private dùng chung để tránh lặp code (DRY principle)
+    private void EnterText(By locator, string text)
+    {
+        var element = driver.FindElement(locator);
+        element.Clear();
+        element.SendKeys(text ?? "");
+    }
 }

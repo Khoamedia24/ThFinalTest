@@ -1,22 +1,56 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 
 namespace ParaBankAutomation.Utilities;
 
-public static class DriverFactory
+public class DriverFactory
 {
-    public static IWebDriver CreateChromeDriver()
+    /// <summary>
+    /// The WebDriver instance used for browser automation.
+    /// </summary>
+    protected IWebDriver driver = null!;
+
+    /// <summary>
+    /// The base URL for the application under test.
+    /// </summary>
+    private const string BaseUrl = "https://parabank.parasoft.com/parabank/index.htm";
+
+    /// <summary>
+    /// The implicit wait timeout in seconds.
+    /// </summary>
+    private const int ImplicitWaitSeconds = 5;
+
+    /// <summary>
+    /// Sets up the WebDriver before each test execution. Initializes the Edge browser with
+    /// maximized window and navigates to the base URL.
+    /// </summary>
+    [SetUp]
+    public void Setup()
     {
-        var options = new ChromeOptions();
-        options.AddArgument("--start-maximized");
+        var options = new EdgeOptions();
+        options.AddArgument("start-maximized");
 
-        var runHeadless = Environment.GetEnvironmentVariable("HEADLESS")?.Equals("true", StringComparison.OrdinalIgnoreCase) == true;
-        if (runHeadless)
+        driver = new EdgeDriver(options);
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(ImplicitWaitSeconds);
+        driver.Navigate().GoToUrl(BaseUrl);
+    }
+
+    /// <summary>
+    /// Tears down the WebDriver after each test execution. Closes the browser and releases resources.
+    /// </summary>
+    [TearDown]
+    public void TearDown()
+    {
+        if (driver != null)
         {
-            options.AddArgument("--headless=new");
-            options.AddArgument("--window-size=1920,1080");
+            try
+            {
+                driver.Quit();
+            }
+            finally
+            {
+                driver.Dispose();
+            }
         }
-
-        return new ChromeDriver(options);
     }
 }

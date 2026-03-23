@@ -1,0 +1,14 @@
+[
+  {
+    "FirstName": "Auto",
+    "LastName": "Tester",
+    "Address": "123 Main St",
+    "City": "HCM",
+    "State": "HCM",
+    "ZipCode": "700000",
+    "Phone": "0900000000",
+    "Ssn": "123456789",
+    "Username": "auto_user_001",
+    "Password": "P@ssw0rd123"
+  }
+]

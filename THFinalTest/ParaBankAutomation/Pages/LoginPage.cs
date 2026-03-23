@@ -1,32 +1,48 @@
 using OpenQA.Selenium;
-using ParaBankAutomation.Utilities;
 
 namespace ParaBankAutomation.Pages;
 
 public class LoginPage
 {
-    private readonly IWebDriver _driver;
-    private readonly WaitHelper _wait;
-
-    private readonly By _usernameInput = By.Name("username");
-    private readonly By _passwordInput = By.Name("password");
-    private readonly By _loginButton = By.CssSelector("input[type='submit'][value='Log In']");
+    private readonly IWebDriver driver;
+    private static readonly By UsernameInputLocator = By.Name("username");
+    private static readonly By PasswordInputLocator = By.Name("password");
+    private static readonly By LoginButtonLocator = By.CssSelector("input[type='submit'][value='Log In']");
+    private static readonly By ErrorMessageLocator = By.CssSelector("#rightPanel .error");
 
     public LoginPage(IWebDriver driver)
     {
-        _driver = driver;
-        _wait = new WaitHelper(driver);
+        this.driver = driver ?? throw new ArgumentNullException(nameof(driver));
     }
 
-    public void Open(string baseUrl)
+    public void EnterUsername(string username)
     {
-        _driver.Navigate().GoToUrl($"{baseUrl}/index.htm");
+        var usernameInput = driver.FindElement(UsernameInputLocator);
+        usernameInput.Clear();
+        usernameInput.SendKeys(username);
     }
 
-    public void Login(string username, string password)
+    public void EnterPassword(string password)
     {
-        _wait.WaitUntilVisible(_usernameInput).SendKeys(username);
-        _driver.FindElement(_passwordInput).SendKeys(password);
-        _driver.FindElement(_loginButton).Click();
+        var passwordInput = driver.FindElement(PasswordInputLocator);
+        passwordInput.Clear();
+        passwordInput.SendKeys(password);
+    }
+
+    public void ClickLogin()
+    {
+        driver.FindElement(LoginButtonLocator).Click();
+    }
+
+    public string GetErrorMessage()
+    {
+        try
+        {
+            return driver.FindElement(ErrorMessageLocator).Text;
+        }
+        catch (NoSuchElementException)
+        {
+            return string.Empty;
+        }
     }
 }

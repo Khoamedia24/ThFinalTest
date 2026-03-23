@@ -1,26 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/khoahuynh/Downloads/BDCLPM_THFinal/THFinalTest/THFinalTest.csproj": {}
+    "D:\\HK3\\BDCLPM\\TH\\FinalLab\\THFinalTest\\THFinalTest.csproj": {}
   },
   "projects": {
-    "/Users/khoahuynh/Downloads/BDCLPM_THFinal/THFinalTest/THFinalTest.csproj": {
+    "D:\\HK3\\BDCLPM\\TH\\FinalLab\\THFinalTest\\THFinalTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/khoahuynh/Downloads/BDCLPM_THFinal/THFinalTest/THFinalTest.csproj",
+        "projectUniqueName": "D:\\HK3\\BDCLPM\\TH\\FinalLab\\THFinalTest\\THFinalTest.csproj",
         "projectName": "THFinalTest",
-        "projectPath": "/Users/khoahuynh/Downloads/BDCLPM_THFinal/THFinalTest/THFinalTest.csproj",
-        "packagesPath": "/Users/khoahuynh/.nuget/packages/",
-        "outputPath": "/Users/khoahuynh/Downloads/BDCLPM_THFinal/THFinalTest/obj/",
+        "projectPath": "D:\\HK3\\BDCLPM\\TH\\FinalLab\\THFinalTest\\THFinalTest.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "D:\\HK3\\BDCLPM\\TH\\FinalLab\\THFinalTest\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/khoahuynh/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,19 +43,24 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[17.8.0, )"
             },
             "NUnit": {
               "target": "Package",
-              "version": "[3.14.0, )"
+              "version": "[4.5.1, )"
             },
             "NUnit.Analyzers": {
               "target": "Package",
@@ -59,6 +69,22 @@
             "NUnit3TestAdapter": {
               "target": "Package",
               "version": "[4.5.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.4, )"
+            },
+            "Selenium.Support": {
+              "target": "Package",
+              "version": "[4.41.0, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.41.0, )"
+            },
+            "Selenium.WebDriver.ChromeDriver": {
+              "target": "Package",
+              "version": "[145.0.7632.7700, )"
             },
             "coverlet.collector": {
               "target": "Package",
@@ -81,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.402/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
